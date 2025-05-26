@@ -15,7 +15,7 @@
     h1 { text-align: center; }
     .drink-log { margin-top: 1rem; max-height: 300px; overflow-y: auto; }
     .drink-entry { padding: 0.5rem; border-bottom: 1px solid #ccc; }
-    .reminder { color: red; font-weight: bold; margin-top: 1rem; }
+    .reminder { color: #d6336c; font-weight: bold; margin-top: 1rem; }
     button, select {
       font-size: 1rem;
       padding: 0.5rem;
@@ -68,7 +68,6 @@
     let drinkLog = [];
     let sessionStart = null;
 
-    // Load session from localStorage or start new
     function loadSession() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -93,7 +92,6 @@
       showReminders();
     }
 
-    // Save current session to localStorage
     function saveSession() {
       const data = {
         sessionStart: sessionStart.toISOString(),
@@ -105,7 +103,6 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
 
-    // Start new session (clear everything)
     function startNewSession() {
       sessionStart = new Date();
       drinkLog = [];
@@ -114,7 +111,6 @@
       showReminders();
     }
 
-    // Log a new drink
     function logDrink() {
       const type = document.getElementById('drink-type').value;
       const timestamp = new Date();
@@ -124,7 +120,6 @@
       showReminders();
     }
 
-    // Update the UI with current session data
     function updateUI() {
       document.getElementById('session-start').textContent = sessionStart.toLocaleTimeString();
 
@@ -141,21 +136,24 @@
       document.getElementById('total-drinks').textContent = drinkLog.length;
     }
 
-    // Show reminders based on drink count
     function showReminders() {
       const count = drinkLog.length;
       let message = '';
 
-      if (count === 2) {
-        message = 'Reminder: Time for water? 💧';
-      } else if (count === 5) {
-        message = 'Reminder: Consider taking a 1-hour break from drinking. ⏳';
+      if (count > 0 && count % 2 === 0) {
+        message += '💧 Reminder: Time for water!';
+      }
+
+      if (count > 0 && count % 5 === 0) {
+        const lastDrinkTime = drinkLog[drinkLog.length - 1].time;
+        const resumeTime = new Date(lastDrinkTime.getTime() + 60 * 60 * 1000);
+        const resumeTimeStr = resumeTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        message += ` ⏳ Take a 1-hour break. You can continue drinking at ${resumeTimeStr}.`;
       }
 
       document.getElementById('reminder').textContent = message;
     }
 
-    // Event listeners
     document.getElementById('log-drink-btn').addEventListener('click', logDrink);
     document.getElementById('new-session-btn').addEventListener('click', () => {
       if (confirm('Are you sure you want to start a new session? This will clear your current drink log.')) {
@@ -163,7 +161,6 @@
       }
     });
 
-    // Initialize on load
     loadSession();
   </script>
 </body>
