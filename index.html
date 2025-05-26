@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Drink Tracker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f8f9fa;
+      padding: 1rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 { text-align: center; }
+    .drink-log { margin-top: 1rem; }
+    .drink-entry { padding: 0.5rem; border-bottom: 1px solid #ccc; }
+    .reminder { color: red; font-weight: bold; margin-top: 1rem; }
+    button, select {
+      font-size: 1rem;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+    }
+    #summary {
+      background: #e9ecef;
+      padding: 1rem;
+      margin-top: 2rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Drink Tracker</h1>
+
+  <label for="drink-type">Select Drink Type:</label>
+  <select id="drink-type">
+    <option value="Beer">Beer</option>
+    <option value="Wine">Wine</option>
+    <option value="Cocktail">Cocktail</option>
+    <option value="Shot">Shot</option>
+  </select>
+  <br />
+  <button onclick="logDrink()">Log Drink</button>
+
+  <div id="reminder" class="reminder"></div>
+
+  <div class="drink-log" id="drink-log"></div>
+
+  <div id="summary">
+    <h2>Session Summary</h2>
+    <p>Total Drinks: <span id="total-drinks">0</span></p>
+    <p>Started At: <span id="session-start">-</span></p>
+  </div>
+
+  <script>
+    const drinkLog = [];
+    let sessionStart = new Date();
+
+    document.getElementById('session-start').textContent = sessionStart.toLocaleTimeString();
+
+    function logDrink() {
+      const type = document.getElementById('drink-type').value;
+      const timestamp = new Date();
+      drinkLog.push({ type, time: timestamp });
+
+      updateUI();
+      showReminders();
+    }
+
+    function updateUI() {
+      const logContainer = document.getElementById('drink-log');
+      logContainer.innerHTML = '';
+
+      drinkLog.forEach((entry, index) => {
+        const div = document.createElement('div');
+        div.className = 'drink-entry';
+        div.textContent = `#${index + 1} - ${entry.type} at ${entry.time.toLocaleTimeString()}`;
+        logContainer.appendChild(div);
+      });
+
+      document.getElementById('total-drinks').textContent = drinkLog.length;
+    }
+
+    function showReminders() {
+      const count = drinkLog.length;
+      let message = '';
+
+      if (count === 2) {
+        message = 'Reminder: Time for water?';
+      } else if (count === 5) {
+        message = 'Reminder: Consider taking a 1-hour break from drinking.';
+      } else {
+        message = '';
+      }
+
+      document.getElementById('reminder').textContent = message;
+    }
+  </script>
+</body>
+</html>
