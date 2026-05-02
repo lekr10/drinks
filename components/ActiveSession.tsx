@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { getDrinkEmoji, formatTime } from '@/lib/utils'
+import { getDrinkEmoji } from '@/lib/utils'
+import { LocalTime } from '@/components/TimeDisplay'
 import type { SessionWithDetails, Drink, FoodEntry, DrinkType } from '@/lib/types'
 
 const DRINK_TYPES: DrinkType[] = ['Beer', 'Wine', 'Cocktail', 'Shot']
@@ -85,7 +86,7 @@ export default function ActiveSession({ initialSession }: { initialSession: Sess
       {/* Header */}
       <div className="px-5 pt-14 pb-5 border-b border-gray-100">
         <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">
-          Started {formatTime(session.started_at)}
+          Started {<LocalTime iso={session.started_at} />}
         </p>
         <p className="text-3xl font-semibold text-gray-900 mt-1">
           {session.drinks.length} {session.drinks.length === 1 ? 'drink' : 'drinks'}
@@ -151,12 +152,12 @@ export default function ActiveSession({ initialSession }: { initialSession: Sess
                     <span className="text-gray-900 font-medium text-sm">
                       {getDrinkEmoji(item.data.type)} {item.data.type}
                     </span>
-                    <span className="text-gray-400 text-xs">{formatTime(item.data.logged_at)}</span>
+                    <span className="text-gray-400 text-xs">{<LocalTime iso={item.data.logged_at} />}</span>
                   </>
                 ) : (
                   <>
                     <span className="text-gray-600 text-sm flex-1 mr-4">🍽 {item.data.notes}</span>
-                    <span className="text-gray-400 text-xs shrink-0">{formatTime(item.data.logged_at)}</span>
+                    <span className="text-gray-400 text-xs shrink-0">{<LocalTime iso={item.data.logged_at} />}</span>
                   </>
                 )}
               </div>

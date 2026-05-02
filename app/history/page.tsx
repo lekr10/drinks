@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { formatDate, formatDuration } from '@/lib/utils'
+import { formatDuration } from '@/lib/utils'
+import { LocalDate } from '@/components/TimeDisplay'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,7 +33,7 @@ export default async function HistoryPage() {
               className="flex items-center justify-between px-5 py-4"
             >
               <div>
-                <p className="font-medium text-gray-900 text-sm">{formatDate(session.started_at)}</p>
+                <p className="font-medium text-gray-900 text-sm"><LocalDate iso={session.started_at} /></p>
                 <p className="text-gray-400 text-xs mt-0.5">
                   {drinkCount} {drinkCount === 1 ? 'drink' : 'drinks'} · {formatDuration(session.started_at, session.ended_at)}
                 </p>

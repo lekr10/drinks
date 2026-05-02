@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { formatDate, getDrinkEmoji } from '@/lib/utils'
+import { getDrinkEmoji } from '@/lib/utils'
+import { LocalDate } from '@/components/TimeDisplay'
 import type { DrinkType } from '@/lib/types'
 
 export const dynamic = 'force-dynamic'
@@ -70,7 +71,7 @@ export default async function InsightsPage() {
             .slice(0, 10)
             .map(s => (
               <Link key={s.id} href={`/session/${s.id}`} className="flex items-center gap-3">
-                <span className="text-gray-400 text-xs w-20 shrink-0">{formatDate(s.started_at)}</span>
+                <span className="text-gray-400 text-xs w-20 shrink-0"><LocalDate iso={s.started_at} /></span>
                 <div className="flex-1 bg-gray-100 rounded-full h-1.5">
                   <div
                     className="bg-gray-900 rounded-full h-1.5"

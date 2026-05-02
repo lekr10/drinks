@@ -2,7 +2,8 @@ import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import MorningReview from '@/components/MorningReview'
-import { formatDate, formatTime, formatDuration, getDrinkEmoji } from '@/lib/utils'
+import { formatDuration, getDrinkEmoji } from '@/lib/utils'
+import { LocalTime, LocalDate } from '@/components/TimeDisplay'
 import type { SessionWithDetails, DrinkType } from '@/lib/types'
 
 export const dynamic = 'force-dynamic'
@@ -37,9 +38,9 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
     <div className="min-h-dvh bg-white pb-12">
       <div className="px-5 pt-14 pb-4 border-b border-gray-100">
         <Link href="/history" className="text-gray-400 text-sm">← History</Link>
-        <h1 className="text-2xl font-semibold text-gray-900 mt-2">{formatDate(s.started_at)}</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 mt-2"><LocalDate iso={s.started_at} /></h1>
         <p className="text-gray-400 text-xs mt-0.5">
-          {formatTime(s.started_at)}{s.ended_at ? ` – ${formatTime(s.ended_at)}` : ''} · {formatDuration(s.started_at, s.ended_at)}
+          <LocalTime iso={s.started_at} />{s.ended_at ? <> – <LocalTime iso={s.ended_at} /></> : ''} · {formatDuration(s.started_at, s.ended_at)}
         </p>
       </div>
 
@@ -73,12 +74,12 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
                   <span className="text-gray-900 font-medium text-sm">
                     {getDrinkEmoji(item.type)} {item.type}
                   </span>
-                  <span className="text-gray-400 text-xs">{formatTime(item.logged_at)}</span>
+                  <span className="text-gray-400 text-xs"><LocalTime iso={item.logged_at} /></span>
                 </>
               ) : (
                 <>
                   <span className="text-gray-600 text-sm flex-1 mr-4">🍽 {item.notes}</span>
-                  <span className="text-gray-400 text-xs shrink-0">{formatTime(item.logged_at)}</span>
+                  <span className="text-gray-400 text-xs shrink-0"><LocalTime iso={item.logged_at} /></span>
                 </>
               )}
             </div>
