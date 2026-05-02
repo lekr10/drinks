@@ -3,14 +3,14 @@ import { supabase } from '@/lib/supabase'
 
 export async function GET() {
   const url = process.env.SUPABASE_URL
-  const key = process.env.SUPABASE_ANON_KEY
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY
 
   if (!url || !key) {
     return NextResponse.json({
       ok: false,
       error: 'Missing env vars',
       SUPABASE_URL: url ? 'set' : 'MISSING',
-      SUPABASE_ANON_KEY: key ? 'set' : 'MISSING',
+      SUPABASE_PUBLISHABLE_KEY: key ? 'set' : 'MISSING',
     }, { status: 500 })
   }
 
