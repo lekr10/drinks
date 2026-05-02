@@ -7,11 +7,7 @@ import type { SessionWithDetails, DrinkType } from '@/lib/types'
 
 export const dynamic = 'force-dynamic'
 
-export default async function SessionPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default async function SessionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const { data: session, error } = await supabase
     .from('sessions')
@@ -38,27 +34,26 @@ export default async function SessionPage({
   }, {} as Record<string, number>)
 
   return (
-    <div className="min-h-dvh bg-gray-950 text-white pb-12">
-      <div className="px-4 pt-12 pb-4">
+    <div className="min-h-dvh bg-white pb-12">
+      <div className="px-5 pt-14 pb-4 border-b border-gray-100">
         <Link href="/history" className="text-gray-400 text-sm">← History</Link>
-        <h1 className="text-2xl font-bold mt-2">{formatDate(s.started_at)}</h1>
-        <p className="text-gray-400 text-sm mt-0.5">
-          {formatTime(s.started_at)}
-          {s.ended_at ? ` – ${formatTime(s.ended_at)}` : ' – ongoing'} · {formatDuration(s.started_at, s.ended_at)}
+        <h1 className="text-2xl font-semibold text-gray-900 mt-2">{formatDate(s.started_at)}</h1>
+        <p className="text-gray-400 text-xs mt-0.5">
+          {formatTime(s.started_at)}{s.ended_at ? ` – ${formatTime(s.ended_at)}` : ''} · {formatDuration(s.started_at, s.ended_at)}
         </p>
       </div>
 
       {/* Stats */}
-      <div className="px-4 flex gap-3 mb-6 overflow-x-auto pb-1">
-        <StatChip label="drinks" value={s.drinks.length.toString()} />
+      <div className="px-5 py-4 flex gap-6 border-b border-gray-100">
+        <Stat label="Drinks" value={s.drinks.length.toString()} />
         {Object.entries(drinksByType).map(([type, count]) => (
-          <StatChip key={type} label={type} value={`${getDrinkEmoji(type as DrinkType)} ${count}`} />
+          <Stat key={type} label={type} value={`${getDrinkEmoji(type as DrinkType)} ${count}`} />
         ))}
       </div>
 
       {/* Morning review */}
       {s.ended_at && (
-        <div className="px-4 mb-6">
+        <div className="px-5 py-5 border-b border-gray-100">
           <MorningReview
             sessionId={s.id}
             drunkScore={s.drunk_score}
@@ -68,29 +63,28 @@ export default async function SessionPage({
       )}
 
       {/* Feed */}
-      <div className="px-4">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Session Log</p>
-        <div className="space-y-2">
+      <div className="px-5 pt-4">
+        <p className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-2">Session Log</p>
+        <div className="divide-y divide-gray-100">
           {feed.map(item => (
-            <div
-              key={item.id}
-              className="bg-gray-900 rounded-xl px-4 py-3 flex items-center justify-between"
-            >
+            <div key={item.id} className="py-3 flex items-center justify-between">
               {item.kind === 'drink' ? (
                 <>
-                  <span className="font-medium">{getDrinkEmoji(item.type)} {item.type}</span>
-                  <span className="text-gray-400 text-sm">{formatTime(item.logged_at)}</span>
+                  <span className="text-gray-900 font-medium text-sm">
+                    {getDrinkEmoji(item.type)} {item.type}
+                  </span>
+                  <span className="text-gray-400 text-xs">{formatTime(item.logged_at)}</span>
                 </>
               ) : (
                 <>
-                  <span className="text-gray-300 flex-1 mr-4">🍽 {item.notes}</span>
-                  <span className="text-gray-400 text-sm shrink-0">{formatTime(item.logged_at)}</span>
+                  <span className="text-gray-600 text-sm flex-1 mr-4">🍽 {item.notes}</span>
+                  <span className="text-gray-400 text-xs shrink-0">{formatTime(item.logged_at)}</span>
                 </>
               )}
             </div>
           ))}
           {feed.length === 0 && (
-            <p className="text-gray-600 text-center py-6">Nothing logged.</p>
+            <p className="text-gray-400 text-sm py-6 text-center">Nothing logged.</p>
           )}
         </div>
       </div>
@@ -98,11 +92,11 @@ export default async function SessionPage({
   )
 }
 
-function StatChip({ label, value }: { label: string; value: string }) {
+function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-gray-900 rounded-xl px-4 py-3 text-center shrink-0">
-      <p className="text-xl font-bold">{value}</p>
-      <p className="text-gray-400 text-xs mt-0.5">{label}</p>
+    <div>
+      <p className="text-lg font-semibold text-gray-900">{value}</p>
+      <p className="text-xs text-gray-400 mt-0.5">{label}</p>
     </div>
   )
 }

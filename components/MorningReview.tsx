@@ -13,11 +13,10 @@ export default function MorningReview({
   hangoverScore: number | null
 }) {
   const router = useRouter()
-  const alreadyReviewed = initialDrunk !== null
   const [drunkScore, setDrunkScore] = useState<number | null>(initialDrunk)
   const [hangoverScore, setHangoverScore] = useState<number | null>(initialHangover)
   const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(alreadyReviewed)
+  const [saved, setSaved] = useState(initialDrunk !== null)
 
   async function save() {
     if (!drunkScore || !hangoverScore) return
@@ -33,21 +32,21 @@ export default function MorningReview({
   }
 
   return (
-    <div className="bg-gray-900 rounded-2xl p-5">
-      <h2 className="font-bold text-lg mb-5">Morning Review</h2>
+    <div className="border border-gray-200 rounded-2xl p-5 bg-gray-50">
+      <h2 className="font-semibold text-gray-900 mb-5">Morning Review</h2>
 
       <div className="mb-5">
-        <p className="text-gray-400 text-sm mb-2">
+        <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
           How drunk did you get?{' '}
-          {drunkScore && <span className="text-white font-bold">{drunkScore}/10</span>}
+          {drunkScore && <span className="text-gray-900 normal-case">{drunkScore}/10</span>}
         </p>
         <ScoreRow value={drunkScore} onChange={setDrunkScore} disabled={saved} />
       </div>
 
       <div className="mb-5">
-        <p className="text-gray-400 text-sm mb-2">
+        <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
           How bad was the hangover?{' '}
-          {hangoverScore && <span className="text-white font-bold">{hangoverScore}/10</span>}
+          {hangoverScore && <span className="text-gray-900 normal-case">{hangoverScore}/10</span>}
         </p>
         <ScoreRow value={hangoverScore} onChange={setHangoverScore} disabled={saved} />
       </div>
@@ -56,12 +55,12 @@ export default function MorningReview({
         <button
           onClick={save}
           disabled={!drunkScore || !hangoverScore || saving}
-          className="w-full bg-white text-black font-bold py-3.5 rounded-xl disabled:opacity-40"
+          className="w-full bg-gray-900 text-white font-medium py-3 rounded-xl text-sm disabled:opacity-30"
         >
           {saving ? 'Saving...' : 'Save Review'}
         </button>
       ) : (
-        <p className="text-green-400 text-sm text-center font-medium">✓ Review saved</p>
+        <p className="text-green-600 text-sm text-center font-medium">Review saved</p>
       )}
     </div>
   )
@@ -83,10 +82,10 @@ function ScoreRow({
           key={n}
           onClick={() => !disabled && onChange(n)}
           disabled={disabled}
-          className={`flex-1 py-3 rounded-lg text-sm font-bold transition-colors ${
+          className={`flex-1 py-2.5 rounded-lg text-xs font-semibold transition-colors ${
             value === n
-              ? 'bg-white text-black'
-              : 'bg-gray-800 text-gray-500 hover:bg-gray-700'
+              ? 'bg-gray-900 text-white'
+              : 'bg-white border border-gray-200 text-gray-500 hover:border-gray-400'
           } ${disabled ? 'cursor-default' : 'cursor-pointer'}`}
         >
           {n}
